@@ -1,5 +1,5 @@
 # ICD-O Group Mapper
-# This script takes user-supplied ICD-O codes or terms, validates them against mapping files
+# This script takes user-supplied ICD-O codes or terms and returns their group information
 
 # Data Loading: Loads mapping files and looks for any CSV, TSV, or Excel file in the /input directory
 # load packages 
@@ -18,12 +18,12 @@ logger = logging.getLogger(__name__)
 
 def main():
     # obtain files and paths
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    code_mapping_file = pd.read_csv(BASE_DIR / "data" / "code_mapping_file.csv")  # doesn't have synonyms (if the user supplies codes)
-    term_mapping_file = pd.read_csv(BASE_DIR / "data" / "term_mapping_file.csv")  # has synonyms (if the user supplies terms)
+    DIRECTORY = Path(__file__).resolve().parent.parent
+    code_mapping_file = pd.read_csv(DIRECTORY / "data" / "code_mapping_file.tsv", sep='\t')  # doesn't have synonyms (if the user supplies codes)
+    term_mapping_file = pd.read_csv(DIRECTORY / "data" / "term_mapping_file.tsv", sep='\t')  # has synonyms (if the user supplies terms)
 
     # look for any csv, tsv, or excel file in the input folder
-    input_dir = BASE_DIR / "input"
+    input_dir = DIRECTORY / "input"
     input_files = list(input_dir.glob("*.[ct]sv")) + list(input_dir.glob("*.xlsx"))
 
     if not input_files:
@@ -32,11 +32,10 @@ def main():
     else:
         file_to_process = input_files[0]
         logger.info(f"Processing: {os.path.basename(file_to_process)}")
-
-    if file_to_process.endswith('.xlsx'):
-        user_input = pd.read_excel(file_to_process)
-    else:
-        user_input = pd.read_csv(file_to_process, sep=None, engine='python')
+        if file_to_process.suffix.lower() == '.xlsx':
+            user_input = pd.read_excel(file_to_process)
+        else:
+            user_input = pd.read_csv(file_to_process, sep=None, engine='python')
 
 
     ### Validation: Check if user-supplied data are codes or terms, and if they match the mapping files.
@@ -76,18 +75,18 @@ def main():
     if invalid_rows:
         logger.warning(f"Some entries were not recognized: {invalid_rows}") 
 
-    # if second column is supplied
+    # if second column is supplied, accept as terms/codes
     if len(user_input.columns) > 1:
         col2_data = user_input.iloc[:, 1].astype(str).str.strip()
         col2_name = user_input.columns[1]
 
         if key == 'code' and col2_data.isin(term_list).any():
             user_input = user_input.rename(columns={col2_name: 'term'})
-            logger.info("✅ Column 2 recognized as terms and renamed.")
+            logger.info("✅ Column 2 recognized as terms.")
         
         elif key == 'term' and col2_data.str.match(code_pattern).any():
             user_input = user_input.rename(columns={col2_name: 'code'})
-            logger.info("✅ Column 2 recognized as codes and renamed.")
+            logger.info("✅ Column 2 recognized as codes.")
         
         else:
             logger.warning(f"Column 2 ('{col2_name}') not recognized as ICD-O data. Keeping as-is.")
@@ -125,7 +124,8 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M")
 
     # create output file name
-    tsv_filename = f'../output/output_{timestamp}.tsv'
+    original_filename = Path(file_to_process).stem
+    tsv_filename = f"{DIRECTORY}/output/{original_filename}_icdomapper_output_{timestamp}.tsv"
 
     # export the file
     output.to_csv(tsv_filename, sep='\t', index=False)

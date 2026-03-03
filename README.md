@@ -8,7 +8,7 @@ This tool automates the classification of oncology diagnoses into their broader 
 ### File Preparation:
 Place your data file containing your diagnoses identifiers (codes or terms) in the input/ directory (CSV, TSV, or Excel formats supported). The tool will automatically process any supported spreadsheet format.
 
-Place the file in the data/ directory of the project.
+An example inpt file is available in the data/ directory of the project.
 
 ### Data Placement:
 
@@ -25,7 +25,7 @@ Code Formatting: Diagnosis codes must follow the standard ICD-O format: ####/# (
 Term Matching: Diagnosis terms must match standardized ICD-O terminology exactly, including specific punctuation, capitalization, and spacing (e.g., Glioma, malignant).
 
 ### Mapping Logic
-Code Mapping: The tool extracts the 3-digit prefix from the 4-digit code to determine the parent diagnostic group.
+Code Mapping: The tool extracts the 3-digit prefix from the code to determine the parent diagnostic group.
 
 Term Mapping: The tool performs an exact string match against the master ICD-O glossary (including synonyms) to retrieve the corresponding group.
 
