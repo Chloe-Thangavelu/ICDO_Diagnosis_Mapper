@@ -7,7 +7,7 @@ This tool automates the classification of International Classification of Diseas
 ### Output Example
 The following table illustrates how the tool processes input identifiers into standardized output:
 
-| Input Code | Input Term | Prefix | Resulting Diagnosis Group |
+| Code | Term | Range | Group |
 |:---|:---|:---|:---|
 | `8000/0` | Neoplasm, benign | 800 | Neoplasms, NOS |
 | `8000/1` | Tumor, NOS | 800 | Neoplasms, NOS |
@@ -37,7 +37,7 @@ Place your data file containing your diagnoses identifiers (codes or terms) in t
 You may choose to include either or both of these columns:
 
 | Input Code | Input Term |
-|:---|:---|:---|:---|
+|:---|:---|
 | `8000/0` | Neoplasm, benign |
 | `8000/1` | Tumor, NOS | 800 |
 | `8010/0` | Epithelial tumor |
