@@ -4,49 +4,46 @@ A specialized tool for mapping ICD-O diagnosis codes (4-digits) and terms to dia
 # Overview
 This tool automates the classification of International Classification of Diseases (ICD) oncology diagnoses into their broader diagnostic categories. It is designed to accept user-provided data, validate the format, and return a standardized mapping report.
 
+---
+
 # Usage Instructions
-### File Preparation:
-Place your data file containing your diagnoses identifiers (codes or terms) in the input/ directory (CSV, TSV, or Excel formats supported). The tool will automatically process any supported spreadsheet format.
 
-An example inpt file is available in the data/ directory of the project.
+### 1. File Preparation
+Place your data file containing your diagnoses identifiers (codes or terms) in the input/ directory. The tool supports the following file formats:
+* **CSV** (`.csv`)
+* **TSV** (`.tsv`)
+* **Excel** (`.xlsx`)
 
-### Data Placement:
+*An example input file (and mapping files) are located in the `data/` directory.*
 
-The tool identifies mapping keys based on the first column of the provided file.
+### 2. Data Requirements
+* **Column Selection:** If your file contains multiple columns, only the **first column** will be used for group identification; all other columns will be preserved in the output.
+* **Single-Type Columns:** Each column must contain only one type of data (either all codes or all terms). Mixed data types within a single column are not supported.
+* **ICD-O Standards:** * **Codes:** Must follow the standard `####/#` format (e.g., `9380/3`).
+    * **Terms:** Must match the master ICD-O glossary exactly including specific punctuation, capitalization, and spacing (e.g., `Glioma, malignant`).
 
-If your file contains multiple columns, only the first column will be used for group identification; all other columns will be preserved in the output.
+---
 
-###  Data Requirements:
+## Mapping Logic
+* **Code-Based Mapping:** The tool extracts the 3-digit prefix from the code to determine the parent diagnostic group.
+* **Term-Based Mapping:** The tool performs an exact string match against the master ICD-O glossary (including synonyms) to retrieve the corresponding group.
+* **Data Validation:** Any entry that do not meet formatting standards or lack a match in the glossary will be flagged in a "Comments" column in the final output.
 
-Single-Type Columns: Each column must contain only one type of data (either all codes or all terms). Mixed data types within a single column are not supported.
+---
 
-Code Formatting: Diagnosis codes must follow the standard ICD-O format: ####/# (e.g., 9380/3).
+# 🛠 Setup & Installation
 
-Term Matching: Diagnosis terms must match standardized ICD-O terminology exactly, including specific punctuation, capitalization, and spacing (e.g., Glioma, malignant).
-
-### Mapping Logic
-Code Mapping: The tool extracts the 3-digit prefix from the code to determine the parent diagnostic group.
-
-Term Mapping: The tool performs an exact string match against the master ICD-O glossary (including synonyms) to retrieve the corresponding group.
-
-Validation: Entries that do not meet formatting standards or lack a match in the glossary will be flagged in a "Comments" column in the final output.
-
-# Setup & Installation
-Clone the repository:
-git clone https://github.com/YourRepo/ICDO_Diagnosis_Mapper.git
-
-Navigate to the project folder:
+### 1. Clone Repository
+```bash
+git clone [https://github.com/Chloe-Thangavelu/ICDO_Diagnosis_Mapper.git](https://github.com/Chloe-Thangavelu/ICDO_Diagnosis_Mapper.git)
 cd ICDO_Diagnosis_Mapper
-
-Install dependencies:
+```
+### 2. Install Dependencies
+```bash
 pip install -r requirements.txt
-
-Navigate to input folder and upload your file:
-cd input
-
-Navigate to scripts folder:
-cd ..
-cd scripts
-
-Run script:
-python icdo_group_mapper.py
+```
+### 3. Run the Tool
+Ensure your file is in the input/ folder, then execute from the project root:
+```bash
+python scripts/icdo_group_mapper.py
+```
