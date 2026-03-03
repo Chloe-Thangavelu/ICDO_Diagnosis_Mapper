@@ -2,7 +2,7 @@
 A specialized tool for mapping ICD-O diagnosis codes (4-digits) and terms to diagnostic groups(3-digit).
 
 # Overview
-This tool automates the classification of oncology diagnoses into their broader diagnostic categories. It is designed to accept user-provided data, validate the format, and return a standardized mapping report.
+This tool automates the classification of International Classification of Diseases (ICD) oncology diagnoses into their broader diagnostic categories. It is designed to accept user-provided data, validate the format, and return a standardized mapping report.
 
 # Usage Instructions
 ### File Preparation:
@@ -30,3 +30,23 @@ Code Mapping: The tool extracts the 3-digit prefix from the code to determine th
 Term Mapping: The tool performs an exact string match against the master ICD-O glossary (including synonyms) to retrieve the corresponding group.
 
 Validation: Entries that do not meet formatting standards or lack a match in the glossary will be flagged in a "Comments" column in the final output.
+
+# Setup & Installation
+Clone the repository:
+git clone https://github.com/YourRepo/ICDO_Diagnosis_Mapper.git
+
+Navigate to the project folder:
+cd ICDO_Diagnosis_Mapper
+
+Install dependencies:
+pip install -r requirements.txt
+
+Navigate to input folder and upload your file:
+cd input
+
+Navigate to scripts folder:
+cd ..
+cd scripts
+
+Run script:
+python icdo_group_mapper.py
